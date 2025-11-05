@@ -1,0 +1,9 @@
+{
+  "build": {
+    "builder": "NIXPACKS"
+  },
+  "deploy": {
+    "startCommand": "dotnet MaquillajeApi.dll",
+    "restartPolicyType": "ON_FAILURE"
+  }
+}

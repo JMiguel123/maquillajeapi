@@ -16,9 +16,6 @@ C:\PROGRESIVAS\MaquillajeApi\bin\Debug\net7.0\Microsoft.OpenApi.dll
 C:\PROGRESIVAS\MaquillajeApi\bin\Debug\net7.0\Mono.TextTemplating.dll
 C:\PROGRESIVAS\MaquillajeApi\bin\Debug\net7.0\MySqlConnector.dll
 C:\PROGRESIVAS\MaquillajeApi\bin\Debug\net7.0\Pomelo.EntityFrameworkCore.MySql.dll
-C:\PROGRESIVAS\MaquillajeApi\bin\Debug\net7.0\Swashbuckle.AspNetCore.Swagger.dll
-C:\PROGRESIVAS\MaquillajeApi\bin\Debug\net7.0\Swashbuckle.AspNetCore.SwaggerGen.dll
-C:\PROGRESIVAS\MaquillajeApi\bin\Debug\net7.0\Swashbuckle.AspNetCore.SwaggerUI.dll
 C:\PROGRESIVAS\MaquillajeApi\bin\Debug\net7.0\System.CodeDom.dll
 C:\PROGRESIVAS\MaquillajeApi\obj\Debug\net7.0\MaquillajeApi.csproj.AssemblyReference.cache
 C:\PROGRESIVAS\MaquillajeApi\obj\Debug\net7.0\MaquillajeApi.GeneratedMSBuildEditorConfig.editorconfig
@@ -41,3 +38,5 @@ C:\PROGRESIVAS\MaquillajeApi\obj\Debug\net7.0\refint\MaquillajeApi.dll
 C:\PROGRESIVAS\MaquillajeApi\obj\Debug\net7.0\MaquillajeApi.pdb
 C:\PROGRESIVAS\MaquillajeApi\obj\Debug\net7.0\MaquillajeApi.genruntimeconfig.cache
 C:\PROGRESIVAS\MaquillajeApi\obj\Debug\net7.0\ref\MaquillajeApi.dll
+C:\PROGRESIVAS\MaquillajeApi\bin\Debug\net7.0\nuget.config
+C:\PROGRESIVAS\MaquillajeApi\bin\Debug\net7.0\railway.json
