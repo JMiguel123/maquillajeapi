@@ -1,7 +1,7 @@
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
 
-# Copiar el archivo de proyecto
+# Copiar solo el archivo de proyecto primero
 COPY ["MaquillajeApi.csproj", "."]
 RUN dotnet restore "MaquillajeApi.csproj"
 
@@ -10,7 +10,8 @@ COPY . .
 WORKDIR "/src"
 
 # Publicar la aplicación
-RUN dotnet publish "MaquillajeApi.csproj" -c Release -o /app/publish
+RUN dotnet build "MaquillajeApi.csproj" -c Release --no-restore
+RUN dotnet publish "MaquillajeApi.csproj" -c Release -o /app/publish --no-restore --no-build
 
 FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS final
 WORKDIR /app
