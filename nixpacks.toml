@@ -9,3 +9,9 @@ cmds = ["dotnet publish --no-restore -c Release -o out"]
 
 [start]
 cmd = "dotnet out/MaquillajeApi.dll"
+
+[build.args]
+DOTNET_ROOT = "/app/.dotnet"
+
+[plan.providers]
+dotnet = "7.0"
