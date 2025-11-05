@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MaquillajeApi")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+195b6d21d9ee82f88f3fb9f4c996a88e5ff04247")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+51b177352f133e1336091540f6284f1d8587f3b8")]
 [assembly: System.Reflection.AssemblyProductAttribute("MaquillajeApi")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MaquillajeApi")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
