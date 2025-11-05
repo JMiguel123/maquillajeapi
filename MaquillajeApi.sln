@@ -1,0 +1,24 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MaquillajeApi", "MaquillajeApi.csproj", "{369BCB6E-D070-FC45-2E18-DE7C76846B03}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{369BCB6E-D070-FC45-2E18-DE7C76846B03}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{369BCB6E-D070-FC45-2E18-DE7C76846B03}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{369BCB6E-D070-FC45-2E18-DE7C76846B03}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{369BCB6E-D070-FC45-2E18-DE7C76846B03}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DBAB3912-0D90-4325-B760-84F0743EFF5E}
+	EndGlobalSection
+EndGlobal
