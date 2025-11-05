@@ -3,27 +3,14 @@ using MaquillajeApi.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// ✅ DIAGNÓSTICO INICIAL
+// Al inicio de Program.cs, después de builder
 Console.WriteLine("=== DIAGNÓSTICO INICIO ===");
 Console.WriteLine($"MYSQL_URL: {!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("MYSQL_URL"))}");
 Console.WriteLine($"PORT: {Environment.GetEnvironmentVariable("PORT")}");
 Console.WriteLine($"ASPNETCORE_ENVIRONMENT: {Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}");
+Console.WriteLine("=== DIAGNÓSTICO FIN ===");
 
-// CONEXIÓN A MySQL - FORZAR MYSQL_URL
-var connectionString = Environment.GetEnvironmentVariable("MYSQL_URL");
-
-if (string.IsNullOrEmpty(connectionString))
-{
-    Console.WriteLine("❌ MYSQL_URL NO ENCONTRADA - Usando string vacío");
-    connectionString = "Server=localhost;Port=3306;Database=test;Uid=root;Pwd=;";
-}
-else
-{
-    Console.WriteLine("✅ MYSQL_URL ENCONTRADA");
-    Console.WriteLine($"🔗 Connection String: {connectionString.Substring(0, Math.Min(30, connectionString.Length))}...");
-}
-
-// CONFIGURAR SERVICIOS
+// Configurar CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", policy =>
@@ -34,66 +21,62 @@ builder.Services.AddCors(options =>
     });
 });
 
-// ✅ CONFIGURAR DbContext SIN appsettings.json
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+// Conexión a MySQL
+try
+{
+    var connectionString = Environment.GetEnvironmentVariable("MYSQL_URL");
+    
+    if (string.IsNullOrEmpty(connectionString))
+    {
+        Console.WriteLine("⚠️ MYSQL_URL no encontrada");
+        connectionString = "Server=localhost;Port=3306;Database=test;Uid=root;Pwd=password;";
+    }
+    else
+    {
+        Console.WriteLine("🔗 MYSQL_URL encontrada");
+    }
+    
+    builder.Services.AddDbContext<AppDbContext>(options =>
+        options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+        
+    Console.WriteLine("✅ MySQL configurado");
+}
+catch (Exception ex)
+{
+    Console.WriteLine($"❌ ERROR MySQL: {ex.Message}");
+}
 
 builder.Services.AddControllers();
 
 var app = builder.Build();
 
-// ✅ INICIALIZAR BASE DE DATOS CON MANEJO DE ERRORES
-try
+// ✅ INICIALIZAR BASE DE DATOS
+using (var scope = app.Services.CreateScope())
 {
-    using var scope = app.Services.CreateScope();
-    var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    
-    Console.WriteLine("🔧 Intentando conectar a la base de datos...");
-    var canConnect = await context.Database.CanConnectAsync();
-    Console.WriteLine($"✅ Conexión a BD: {canConnect}");
-    
-    if (!canConnect)
+    try
     {
-        Console.WriteLine("⚠️ No se pudo conectar a la BD, pero continuando...");
+        var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        context.Database.EnsureCreated(); // Crea las tablas si no existen
+        Console.WriteLine("✅ Base de datos inicializada");
     }
-}
-catch (Exception ex)
-{
-    Console.WriteLine($"❌ Error conectando a BD: {ex.Message}");
-    // NO salir - dejar que la app inicie sin BD
+    catch (Exception ex)
+    {
+        Console.WriteLine($"❌ Error inicializando BD: {ex.Message}");
+    }
 }
 
 app.UseCors("AllowAll");
 
-// RUTAS
+// Ruta raíz
 app.MapGet("/", () => new { 
     message = "Maquillaje API funcionando", 
     status = "OK",
-    database = "MySQL Railway"
-});
-
-app.MapGet("/db-test", async (AppDbContext context) =>
-{
-    try
-    {
-        var canConnect = await context.Database.CanConnectAsync();
-        return new { 
-            database_connected = canConnect,
-            message = canConnect ? "✅ BD Conectada" : "❌ BD No conectada"
-        };
-    }
-    catch (Exception ex)
-    {
-        return new { 
-            database_connected = false,
-            error = ex.Message
-        };
-    }
+    database = "MySQL"
 });
 
 app.MapControllers();
 
-// ✅ PUERTO CORRECTO PARA RAILWAY
+// ✅ USAR PUERTO DE RAILWAY - ESTO ES CLAVE
 var port = Environment.GetEnvironmentVariable("PORT") ?? "10000";
-Console.WriteLine($"🚀 INICIANDO APLICACIÓN EN PUERTO: {port}");
+Console.WriteLine($"🚀 Iniciando en puerto: {port}");
 app.Run($"http://0.0.0.0:{port}");
