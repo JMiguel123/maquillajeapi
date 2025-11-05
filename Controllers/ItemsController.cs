@@ -140,7 +140,7 @@ public async Task<ActionResult<bool>> AddSale([FromBody] SaleRequest request)
             ProductPrice = product.Price,
             ProductSku = product.Sku ?? "N/A",
             ProductTag = mainTag,
-            SaleDate = DateTime.UtcNow,
+            SaleDate = DateTime.Now,
             ProductId = product.Id
         };
 
