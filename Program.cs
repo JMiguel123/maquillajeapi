@@ -14,56 +14,41 @@ builder.Services.AddCors(options =>
     });
 });
 
-// **CONEXIÓN CON FALLBACKS MÚLTIPLES**
-string connectionString = GetConnectionString();
-
-Console.WriteLine($"✅ Conectando a MySQL...");
-
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+// Conexión a MySQL
+try
+{
+    var connectionString = Environment.GetEnvironmentVariable("MYSQL_URL");
+    Console.WriteLine($"🔗 String de conexión obtenida: {!string.IsNullOrEmpty(connectionString)}");
+    
+    builder.Services.AddDbContext<AppDbContext>(options =>
+        options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+}
+catch (Exception ex)
+{
+    Console.WriteLine($"❌ Error en conexión MySQL: {ex.Message}");
+}
 
 builder.Services.AddControllers();
 
 var app = builder.Build();
 
 app.UseCors("AllowAll");
+
+// ✅ RUTAS ESENCIALES
+app.MapGet("/", () => Results.Json(new { 
+    message = "Maquillaje API funcionando", 
+    status = "OK",
+    timestamp = DateTime.UtcNow 
+}));
+
+app.MapGet("/health", () => Results.Json(new { 
+    status = "Healthy",
+    database = "Connected" 
+}));
+
 app.MapControllers();
-app.Run();
 
-// **MÉTODO PARA OBTENER CADENA DE CONEXIÓN**
-static string GetConnectionString()
-{
-    // 1. Primero intenta con MYSQL_URL (Railway)
-    var mysqlUrl = Environment.GetEnvironmentVariable("MYSQL_URL");
-    if (!string.IsNullOrEmpty(mysqlUrl))
-    {
-        Console.WriteLine("🔗 Usando MYSQL_URL");
-        return mysqlUrl;
-    }
-
-    // 2. Si no, construye con variables individuales
-    var host = Environment.GetEnvironmentVariable("MYSQLHOST") ?? "localhost";
-    var port = Environment.GetEnvironmentVariable("MYSQLPORT") ?? "3306";
-    var database = Environment.GetEnvironmentVariable("MYSQLDATABASE") ?? "maquillaje_db";
-    var user = Environment.GetEnvironmentVariable("MYSQLUSER") ?? "root";
-    var password = Environment.GetEnvironmentVariable("MYSQLPASSWORD") ?? "password";
-
-    // 3. Si no hay variables de entorno, usa appsettings.json
-    if (host == "localhost" && user == "root")
-    {
-        // Esto cargará desde appsettings.json
-        var configuration = new ConfigurationBuilder()
-            .AddJsonFile("appsettings.json")
-            .Build();
-        
-        var defaultConnection = configuration.GetConnectionString("DefaultConnection");
-        if (!string.IsNullOrEmpty(defaultConnection))
-        {
-            Console.WriteLine("📁 Usando appsettings.json");
-            return defaultConnection;
-        }
-    }
-
-    Console.WriteLine("🏗️ Construyendo connection string desde variables de entorno");
-    return $"Server={host};Port={port};Database={database};Uid={user};Pwd={password};";
-}
+// ✅ PUERTO DE RAILWAY
+var port = Environment.GetEnvironmentVariable("PORT") ?? "10000";
+Console.WriteLine($"🚀 Iniciando aplicación en puerto: {port}");
+app.Run($"http://0.0.0.0:{port}");
