@@ -36,17 +36,29 @@ builder.Services.AddControllers();
 
 var app = builder.Build();
 
-// INICIALIZAR BD
+// ✅ ELIMINAR EnsureCreated() - NO CREAR TABLAS AUTOMÁTICAMENTE
 try
 {
     using var scope = app.Services.CreateScope();
     var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    await context.Database.EnsureCreatedAsync();
-    Console.WriteLine("✅ Base de datos inicializada");
+    
+    // Solo verificar conexión, NO crear tablas
+    var canConnect = await context.Database.CanConnectAsync();
+    Console.WriteLine($"📊 Conexión a BD: {canConnect}");
+    
+    if (canConnect)
+    {
+        // Verificar si existen datos
+        var productCount = await context.Products.CountAsync();
+        var saleCount = await context.Sales.CountAsync();
+        
+        Console.WriteLine($"📦 Productos en BD: {productCount}");
+        Console.WriteLine($"💰 Ventas en BD: {saleCount}");
+    }
 }
 catch (Exception ex)
 {
-    Console.WriteLine($"⚠️  Error BD: {ex.Message}");
+    Console.WriteLine($"⚠️  Error conectando a BD: {ex.Message}");
 }
 
 app.UseCors("AllowAll");
@@ -57,6 +69,8 @@ app.MapGet("/", () => new {
     message = "Maquillaje API funcionando",
     timestamp = DateTime.UtcNow
 });
+
+
 
 var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
 app.Run($"http://0.0.0.0:{port}");
